@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>ניהול משתמשים</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background-color: #f4f7f6; text-align: right; }
+        h1, h2 { color: #333; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: right; }
+        th { background-color: #007bff; color: white; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+        .form-container { background: white; padding: 20px; border-radius: 5px; box-shadow: 0 0 10px rgba(0,0,0,0.1); max-width: 400px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
+        .form-group input { width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+        button { background-color: #28a745; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
+        button:hover { background-color: #218838; }
+    </style>
+</head>
+<body>
+
+    <h1>ניהול משתמשים במערכת</h1>
+
+    <div class="form-container">
+        <h2>הוספת משתמש חדש</h2>
+        <form action="/users/add" method="POST">
+            <div class="form-group">
+                <label for="username">שם משתמש:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="email">אימייל:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <button type="submit">שמור משתמש</button>
+        </form>
+    </div>
+
+    <hr style="margin: 40px 0; border: 0; border-top: 1px solid #ccc;">
+
+    <h2>רשימת משתמשים קיימים</h2>
+    
+    <%c++ 
+        // אנו מושכים מערך JSON פשוט ולא אובייקט ORM מורכב
+        auto usersArray = @@.get<Json::Value>("users_json");
+    %>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>שם משתמש</th>
+                <th>אימייל</th>
+                <th>תאריך יצירה</th>
+            </tr>
+        </thead>
+        <tbody>
+        <%c++ for(const auto& user : usersArray) { %>
+            <tr>
+                <td>{% user["id"].asString() %}</td>
+                <td>{% user["username"].asString() %}</td>
+                <td>{% user["email"].asString() %}</td>
+                <td>{% user["created_at"].asString() %}</td>
+            </tr>
+        <%c++ } %>
+        </tbody>
+    </table>
+
+</body>
+</html>
+
+
+
