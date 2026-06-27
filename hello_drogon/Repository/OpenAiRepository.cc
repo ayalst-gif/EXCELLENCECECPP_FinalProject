@@ -8,9 +8,10 @@
 #include <memory>
 #include <array>
 #include <unistd.h>
+#include "repo_key.h"
 
 OpenAiRepository::OpenAiRepository() 
-    : apiKey_("AQ.Ab8RN6LlsgVTQvmcHdIYrou314U8jFCMAft9YBvJLzZXx6fN7Q") 
+    : apiKey_(REPO_KEY) 
 {
 }
 
