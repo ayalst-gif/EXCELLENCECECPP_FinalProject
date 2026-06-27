@@ -10,7 +10,7 @@
 #include <unistd.h>
 
 OpenAiRepository::OpenAiRepository() 
-    : apiKey_("AIzaSyCjfFeAwLFNgahaaeL1Ah0Re0F9aagOEoQ") 
+    : apiKey_("AQ.Ab8RN6LlsgVTQvmcHdIYrou314U8jFCMAft9YBvJLzZXx6fN7Q") 
 {
 }
 
