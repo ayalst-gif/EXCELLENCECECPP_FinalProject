@@ -21,6 +21,8 @@ struct UserWithRoleDTO {
 
 using GetUsersCallback = std::function<void(bool success, const std::optional<drogon::orm::Result>& result, const std::string& errorMsg)>;
 using ActionCallback   = std::function<void(bool success, const std::string& message)>;
+// תוסיף את זה לצד ה-using-ים האחרים ב-UserService.h
+using DeleteUserCallback = std::function<void(bool success, const std::string& errorMsg)>;
 
 // עדכון ה-Callback שיעביר את וקטור ה-DTOs במקום המודל הגולמי של ה-ORM
 using GetOMRUsersCallback = std::function<void(bool success, const std::vector<UserWithRoleDTO>& users, const std::string& errorMsg)>;
@@ -36,4 +38,7 @@ public:
     void getUsersList(GetUsersCallback&& callback);
     void createNewUser(const std::string& username, const std::string& email, ActionCallback&& callback);
     void getUsersWithRolesList(GetOMRUsersCallback&& callback);
+    
+    // בתוך ה-class UserService (תחת public):
+    void deleteUser(int32_t userId, DeleteUserCallback&& callback);
 };

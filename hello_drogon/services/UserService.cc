@@ -65,4 +65,32 @@ void UserService::getUsersWithRolesList(GetOMRUsersCallback&& callback) {
     );
 }
 
+void UserService::deleteUser(int32_t userId, DeleteUserCallback&& callback) {
+    // Get the global asynchronous database client managed by Drogon
+    auto dbClient = drogon::app().getDbClient();
+    
+    // Wrap the callback in a shared_ptr to prevent memory corruption or 
+    // std::bad_function_call if the Event Loop manages multiple lambdas.
+    auto sharedCallback = std::make_shared<DeleteUserCallback>(std::move(callback));
+
+    // Execute the SQL DELETE statement asynchronously to keep the server non-blocking
+    dbClient->execSqlAsync(
+        "DELETE FROM users WHERE id = $1",
+        [sharedCallback](const drogon::orm::Result& r) {
+            // Check if the shared pointer still contains a valid callback function
+            if (*sharedCallback) {
+                // Invoke the callback signaling success (true) with no error message
+                (*sharedCallback)(true, "");
+            }
+        },
+        [sharedCallback](const drogon::orm::DrogonDbException& e) {
+            // Check if the shared pointer still contains a valid callback function
+            if (*sharedCallback) {
+                // Invoke the callback signaling failure (false) and forward the database error
+                (*sharedCallback)(false, e.base().what());
+            }
+        },
+        userId // Pass the integer variable safely to bind it to the $1 placeholder
+    );
+}
 
